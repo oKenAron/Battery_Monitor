@@ -1,0 +1,13 @@
+[Unit]
+Description=Battery monitor — run every 3 minutes
+
+[Timer]
+# 开机 2 分钟后首次执行（等系统稳定）
+OnBootSec=2min
+# 之后每 3 分钟执行一次
+OnUnitActiveSec=3min
+# 若错过触发（如挂起），唤醒后立即补跑一次
+Persistent=true
+
+[Install]
+WantedBy=timers.target

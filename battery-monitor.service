@@ -1,0 +1,21 @@
+[Unit]
+Description=Battery monitor — single log run
+# timer 触发时运行，不需要 After= 网络等依赖
+
+[Service]
+Type=oneshot
+
+# 脚本路径由环境变量注入，install.sh 会自动替换
+ExecStart=%h/scripts/battery_monitor.sh
+
+# 允许通过环境变量覆盖配置
+Environment=BATTERY_LOG_MAX_LINES=10000
+# 若要自定义日志目录，取消下行注释并修改路径
+# Environment=BATTERY_LOG_DIR=/var/log/battery_monitor
+
+# 失败时不无限重试（oneshot 默认行为，显式声明更清晰）
+Restart=no
+
+# 资源限制：这是个轻量脚本，限制防止异常占用
+CPUQuota=10%
+MemoryMax=32M
