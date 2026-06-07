@@ -1,5 +1,4 @@
 # battery_monitor
-> 🤖 Powered by [Claude Sonnet 4.6](https://www.anthropic.com)
 
 双电池（及多电池）状态记录与终端可视化工具。  
 适用于 Arch Linux / systemd 环境，无第三方依赖即可运行核心功能。
@@ -74,21 +73,31 @@ percent = (BAT0_now + BAT1_now) / (BAT0_full + BAT1_full) × 100
 
 ## 日志格式
 
-CSV 文件，UTF-8，表头固定：
+CSV 文件，UTF-8，表头**动态生成**（根据实际检测到的电池数量）：
 
 ```
-timestamp,percent,status,batteries,energy_now_mwh,energy_full_mwh
+timestamp,total_percent,status,total_now_mwh,total_full_mwh,BAT0_percent,BAT0_now_mwh,BAT0_full_mwh,BAT0_status,BAT1_percent,BAT1_now_mwh,BAT1_full_mwh,BAT1_status
 ```
 
 示例行：
 
 ```
-2025-06-06 14:03:00,78.45,Discharging,"BAT0 BAT1",42130.0,53800.0
-2025-06-06 14:06:00,77.91,Discharging,"BAT0 BAT1",41830.0,53800.0
+2026-06-06 14:03:00,78.72,Charging,48180.0,61200.0,80.00,48000.0,60000.0,Discharging,15.00,180.0,1200.0,Charging
+2026-06-06 14:06:00,78.21,Charging,47880.0,61200.0,79.50,47700.0,60000.0,Discharging,15.00,180.0,1200.0,Charging
 ```
 
-- `energy_now_mwh` / `energy_full_mwh`：单位 mWh（原始 µWh 除以 1000），方便人工阅读
-- `batteries`：参与计算的电池列表，用引号包裹（含空格）
+字段说明：
+
+| 字段 | 说明 |
+|---|---|
+| `total_percent` | 两块电池合并后的加权百分比 |
+| `status` | 合并状态（Charging / Discharging / Full） |
+| `total_now_mwh` / `total_full_mwh` | 合并总电量，单位 mWh |
+| `BATx_percent` | 该电池独立百分比 |
+| `BATx_now_mwh` / `BATx_full_mwh` | 该电池当前/满电量，单位 mWh |
+| `BATx_status` | 该电池独立状态 |
+
+表头在首次创建日志文件时自动生成，列数与检测到的电池数一致，不需要手动配置。
 
 ### 日志轮转
 
