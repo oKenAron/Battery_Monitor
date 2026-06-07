@@ -1,4 +1,5 @@
 # battery_monitor
+> 🤖 Powered by [Claude Sonnet 4.6](https://www.anthropic.com)
 
 双电池（及多电池）状态记录与终端可视化工具。  
 适用于 Arch Linux / systemd 环境，无第三方依赖即可运行核心功能。
